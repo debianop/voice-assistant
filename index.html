@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Speech to Text</title>
+</head>
+<body>
+<button id="start-btn" disabled>Start Recording</button>
+<p id="output"></p>
+
+<script>
+const startBtn = document.getElementById('start-btn');
+const output = document.getElementById('output');
+
+if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
+  startBtn.disabled = false;
+
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const recognition = new SpeechRecognition();
+  
+  // Specify Turkish language
+  recognition.lang = 'tr-TR';
+
+  recognition.onstart = () => {
+    console.log('Voice recognition activated. Speak into the microphone.');
+  };
+
+  recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    output.textContent = transcript;
+  };
+
+  recognition.onerror = (event) => {
+    console.error('Speech recognition error occurred:', event.error);
+  };
+
+  startBtn.addEventListener('click', () => {
+    recognition.start();
+  });
+} else {
+  output.textContent = 'Speech recognition is not supported in this browser.';
+}
+</script>
+</body>
+</html>
